@@ -1,0 +1,501 @@
+!pip install jovian --upgrade -q
+import jovian
+jovian.commit(project='zerotoanalyst-numpy-array-operations')
+import numpy as np
+import pandas as pd
+!pip install lxml bs4 html5lib
+## Function 1 - np.random
+Random should be one of the most used numpy function ever. We need random numbers in several use case scenarios to mimic/work on real-world problems which random function so elegantly provides us.
+
+Syntax:
+
+numpy.random.randint(low, high=None, size=None, dtype=’l’)
+
+Example 1 (Working):
+
+Random function is used a lot in mimicking random events such as drawing a card from a stack of cards, coin toss, pulling a lucky chit from a lot. In this example, we will consider a coin toss for simplicity
+
+What is the probability that if a coin is tossed, you get heads?? it's 1/2 right? But that's just theoretical. Let's toss a coin 10 times to see if we get heads 5 times
+
+np.random.randint(2,size=10)  #where 0 is Heads, 1 is Tails.
+array([1, 1, 1, 1, 0, 0, 1, 0, 1, 1])
+#During this instance, there were only 3 Heads but 7 Tails. Randomness!
+Example 2 (Working):
+
+Let's explore another useful variety of Random function - Choice. This allows us to pick any value randomly from a defined list of values like the below
+
+np.random.choice(['Heads','Tails'], size=10)
+array(['Heads', 'Tails', 'Heads', 'Heads', 'Heads', 'Tails', 'Heads',
+       'Heads', 'Heads', 'Heads'], dtype='<U5')
+Example 3 (Breaking):
+
+np.random.choice('Heads','Tails',10)
+---------------------------------------------------------------------------
+TypeError                                 Traceback (most recent call last)
+mtrand.pyx in numpy.random.mtrand.RandomState.choice()
+
+TypeError: 'str' object cannot be interpreted as an integer
+
+During handling of the above exception, another exception occurred:
+
+ValueError                                Traceback (most recent call last)
+/tmp/ipykernel_36/529045389.py in <module>
+----> 1 np.random.choice('Heads','Tails',10)
+mtrand.pyx in numpy.random.mtrand.RandomState.choice()
+
+ValueError: a must be 1-dimensional or an integer
+The above code throws an error because the choice should be either an integer or a 1-dimensional value,meaning string should be within the square brackets. It can be fixed by simply enclosing the string choices within a square bracket.
+
+jovian.commit()
+[jovian] Updating notebook "meenakshi-ravikumar/zerotoanalyst-numpy-array-operations" on https://jovian.ai
+[jovian] Committed successfully! https://jovian.ai/meenakshi-ravikumar/zerotoanalyst-numpy-array-operations
+'https://jovian.ai/meenakshi-ravikumar/zerotoanalyst-numpy-array-operations'
+Function 2 - np.where
+This is a very useful function to apply a condition on a numpy array and manipulate it or save the output to a new variable. Think of it as the if condition used in Excel. Numpy follows similar syntax:
+
+numpy.where(condition, what to do if true, what to do if false)
+
+For every element in the array, if the condition you have given is satisfied, Numpy will execute what you have mentioned right after the condition (second argument) and goes on to execute the third argument for all elements in the array which does not satisfy the condition given.
+
+Example 1 (Working):
+
+The following numpy array stores the salaries of all employees in the Manufacturing department of a company XYZ
+
+Mfg_Salary = np.array([56000,58000,54000, 49000, 64000, 60500, 51590, 63300, 59000, 60100])
+The CEO has decided to give out pay rises for employees that are making less than a certain salary for the manufacturing department to increase the minimum wage. Now, let's use the where function to identify those employeees and revise their salaries to the new minimum wage For this example, we will consider 55000 as the minimum salary
+
+New_Mfg_Salary = np.where(Mfg_Salary<55000,55000,Mfg_Salary).reshape(5,2)
+New_Mfg_Salary
+array([[56000, 58000],
+       [55000, 55000],
+       [64000, 60500],
+       [55000, 63300],
+       [59000, 60100]])
+You can see that there were 3 people with salaries less than 54000 which we were able to identify and revise using where function
+
+Example 2 (Working):
+
+Let's help out Teacher Meera to identify and group students into Kindergarten and Grade school based on their age
+
+Age = np.array([3,4,5,8,4,4,7,6,5,7,6,8])
+Age
+array([3, 4, 5, 8, 4, 4, 7, 6, 5, 7, 6, 8])
+Class = np.where(Age<5,'Kindergarten','Grade School')
+Class.reshape(3,4)
+array([['Kindergarten', 'Kindergarten', 'Grade School', 'Grade School'],
+       ['Kindergarten', 'Kindergarten', 'Grade School', 'Grade School'],
+       ['Grade School', 'Grade School', 'Grade School', 'Grade School']],
+      dtype='<U12')
+You can see that there were 4 kids that belonged to Kindergarten and 8 kids that belonged to Grade School which we were able to identify and label using where function
+
+Example 3 (Breaking):
+
+Let's use the same example as the second one but with a small change in the code. We are only trying to give the value for two arguments. Condition and what to do if that condition is true because we are only looking to label the kindergarteners
+
+Age = np.array([3,4,5,8,4,4,7,6,5,7,6,8])
+Class = np.where(Age<5,'Kindergarten')
+Class.reshape(3,4)
+---------------------------------------------------------------------------
+ValueError                                Traceback (most recent call last)
+<ipython-input-21-1c3a8665539c> in <module>
+      1 Age = np.array([3,4,5,8,4,4,7,6,5,7,6,8])
+----> 2 Class = np.where(Age<5,'Kindergarten')
+      3 Class.reshape(3,4)
+
+<__array_function__ internals> in where(*args, **kwargs)
+
+ValueError: either both or neither of x and y should be given
+This has thrown an error at us because the 'where' function needs us to give either both the arguments (what if true, what if false) or neither. We cannot give just one argument for when it's true or false. We will get a ValueError thrown at us like the above.
+
+To fix the error above, simply remove both x and y argument or give values for both x and y arguments
+
+Speaking of the arguments requirement, the 'where' function will work if we give just the condition too. However, with no x or y, the 'where' function will essentially behave just like np.asarray(condition).nonzero()
+
+jovian.commit()
+[jovian] Updating notebook "meenakshi-ravikumar/zerotoanalyst-numpy-array-operations" on https://jovian.ai
+[jovian] Committed successfully! https://jovian.ai/meenakshi-ravikumar/zerotoanalyst-numpy-array-operations
+'https://jovian.ai/meenakshi-ravikumar/zerotoanalyst-numpy-array-operations'
+Function 3 - np.linspace
+Linspace function creates a list of numbers with the specified start number, end number that are equally spaced according to the number defined.
+
+Syntax is numpy.linspace(start, stop, num=50, endpoint=True, retstep=False, dtype=None, axis=0)
+
+Note: In numpy.linspace function,it is not mandatory that you have to use all the parameters provided in the syntax every time.
+
+Example 1 (Working):
+
+np.linspace(0,20,11)
+array([ 0.,  2.,  4.,  6.,  8., 10., 12., 14., 16., 18., 20.])
+The above example creates an array starting from 0 and ends at 20,with equal intervals of 11.
+
+Example 2 (Working):
+
+import pylab as p
+ 
+x = np.linspace(0, 5, 5)
+y = np.ones(5)
+ 
+p.plot(x, y, 'o')
+[<matplotlib.lines.Line2D at 0x7f4a88d82400>]
+Notebook Image
+The above example uses np.linspace function to plot a graph with equal intervals.
+Example 3 (Breaking):
+
+data1 = np.linspace(1, 5, 10, retstep=True)
+print(data1 - 1)
+---------------------------------------------------------------------------
+TypeError                                 Traceback (most recent call last)
+<ipython-input-76-ad16dbca808c> in <module>
+      1 data1 = np.linspace(1, 5, 10, retstep=True)
+----> 2 print(data1 - 1)
+***We're seeing this Typeerror because, we've set the retstep to True. By default, retstep is False, which means spacing between the samples. When retstep is True, Python will consider the data as a tuple, and hence we are unable to perform the operation between a tuple and an integer. To fix this error, simply remove the retstep or set it to False***
+
+Function 4 - np.sort
+Sort is a very simple and powerful function that, as the name directly suggests, sorts an array. A Sorted list is a pre-requisite for a variety of exploratory data analyses which we can achieve quickly with the Sort function.
+
+Syntax is: numpy.sort(a, axis=- 1, kind=None, order=None)
+
+Here, a is the array that we need to sort. This is the only mandatory argument that sort needs. Rest are all optional axis is the axis along which we need to sort. Default value is -1 which means last axis kind gives you an option to use a certain sorting algorithm. Options are quicksort, mergesort, heapsort, stable. Default value is quick sort. order gives us an option to specify which fields to compare first, second, third etc., You can provide a string or a list of string values for this argument.
+
+Example 1 (Working):
+
+a = np.array([('Michael Scott', 16, 45), ('Dwight Schrute', 12, 38),
+       ('James Halpert', 9, 36), ('Pamela Beesly', 10, 34)],
+    dtype=[('Employee Name', 'S25'), ('Tenure', '<i4'), ('Age', '<i4')])
+a
+array([(b'Michael Scott', 16, 45), (b'Dwight Schrute', 12, 38),
+       (b'James Halpert',  9, 36), (b'Pamela Beesly', 10, 34)],
+      dtype=[('Employee Name', 'S25'), ('Tenure', '<i4'), ('Age', '<i4')])
+np.sort(a, order=['Age', 'Tenure'])
+array([(b'Pamela Beesly', 10, 34), (b'James Halpert',  9, 36),
+       (b'Dwight Schrute', 12, 38), (b'Michael Scott', 16, 45)],
+      dtype=[('Employee Name', 'S25'), ('Tenure', '<i4'), ('Age', '<i4')])
+We've made use of the order argument within the sort function to sort the list to our liking
+
+Example 2 (Working):
+
+Like we discussed above, Sort alone does not do much with data other than arranging it in order, but combined with other functions, helps achieve the bigger task quicker. Let's say you are looking at potential B-Schools to apply to and you wanted to find out the median salary of their current year students in the pharma industry. Median is the middle value in a data, so for median to make sense, the list should be sorted first
+
+pharma_salaries = np.array([128000, 140000, 97000, 110000, 124000, 
+                            156000, 99500, 115600, 145000, 115000, 136000, 139000, 151000, 177000, 183000, 188000, 200000, 210000])
+pharma_salaries
+array([128000, 140000,  97000, 110000, 124000, 156000,  99500, 115600,
+       145000, 115000, 136000, 139000, 151000, 177000, 183000, 188000,
+       200000, 210000])
+sorted_pharma_salaries = np.sort(pharma_salaries)
+sorted_pharma_salaries.reshape(3,6)
+array([[ 97000,  99500, 110000, 115000, 115600, 124000],
+       [128000, 136000, 139000, 140000, 145000, 151000],
+       [156000, 177000, 183000, 188000, 200000, 210000]])
+np.median(sorted_pharma_salaries)
+139500.0
+Example 3 (Breaking):
+
+Let's use the same example as the first one for this
+
+a = np.array([('Michael Scott', 16, 45), ('Dwight Schrute', 12, 38),
+       ('James Halpert', 9, 36), ('Pamela Beesly', 10, 34)],
+    dtype=[('Employee Name', 'S25'), ('Tenure', '<i4'), ('Age', '<i4')])
+np.sort(a, order=['age', 'Tenure'])
+---------------------------------------------------------------------------
+ValueError                                Traceback (most recent call last)
+<ipython-input-74-b6add078ce8e> in <module>
+      2        ('James Halpert', 9, 36), ('Pamela Beesly', 10, 34)],
+      3     dtype=[('Employee Name', 'S25'), ('Tenure', '<i4'), ('Age', '<i4')])
+----> 4 np.sort(a, order=['age', 'Tenure'])
+
+<__array_function__ internals> in sort(*args, **kwargs)
+
+/opt/conda/lib/python3.9/site-packages/numpy/core/fromnumeric.py in sort(a, axis, kind, order)
+    996     else:
+    997         a = asanyarray(a).copy(order="K")
+--> 998     a.sort(axis=axis, kind=kind, order=order)
+    999     return a
+   1000 
+
+/opt/conda/lib/python3.9/site-packages/numpy/core/_internal.py in _newnames(datatype, order)
+    411                     raise ValueError(f"duplicate field name: {name}") from None
+    412                 else:
+--> 413                     raise ValueError(f"unknown field name: {name}") from None
+    414             seen.add(name)
+    415         return tuple(list(order) + nameslist)
+
+ValueError: unknown field name: age
+This one happens frequently than it should. It's almost the same code but you have to be careful when specifying the column name correctly in the order argument. To resolve the error, simply verify the column name and rectify in the code
+
+Function 5 - np.nan
+Anyone who's performed even a few days of data analysis will tell you how rare (I mean impossible) it is to find absolutely pure/complete datasets. That said, we will deal with a lot of blanks, dashes/hyphens, NA, null in datasets. It is important to convert those delinquents to Nan which means "Not a Number" so it is easy to find them and drop them where required.
+
+NaN is typically used alongside Replace function so we can replace the dirty data values to NaN
+
+Example 1 (Working):
+data1 = pd.read_html(
+
+    '''
+    <table>
+<tr>
+<th>Name</th>
+<th>Salary</th>
+<th>City</th>
+</tr>
+<tr>
+<td>John</td>
+<td>--</td>
+<td>Sydney</td>
+</tr>
+<tr>
+<td>Robert</td>
+<td>3000</td>
+<td>Sydney</td>
+</tr>
+<tr>
+<td>Aadi</td>
+<td>1600</td>
+<td>New York</td>
+</tr>
+<tr>
+<td>Robert</td>
+<td>-</td>
+<td>Chicago</td>
+</tr>
+<tr>
+<td>Robert</td>
+<td>3000</td>
+<td>Chicago</td>
+</tr>
+<tr>
+<td>Robert</td>
+<td>3000</td>
+<td>NA</td>
+</tr>
+<tr>
+<td>Aadi</td>
+<td>4000</td>
+<td>Chicago</td>
+</tr>
+<tr>
+<td>Sachin</td>
+<td>5000</td>
+<td>Chicago</td>
+</tr>
+   
+</table>
+    
+    
+    '''
+
+) [0]
+
+data1
+data1.replace(['Unknown','-','--','na','NA'],np.nan, inplace=True)
+data1
+
+We've used NaN function in combination with replace function to help us identify the dirty values and call them as one term- NaN which we can use to decide whether to keep or drop the data.
+
+Example 2 (Working):
+
+Once we have decided we need to drop the missing values, we can drop them using the following code
+
+data1.dropna(inplace=True)
+data1
+
+Example 3 (Breaking):
+
+np.nan = data1[data1=='Aadi']
+np.nan
+---------------------------------------------------------------------------
+TypeError                                 Traceback (most recent call last)
+/opt/conda/lib/python3.9/site-packages/IPython/core/formatters.py in __call__(self, obj)
+    700                 type_pprinters=self.type_printers,
+    701                 deferred_pprinters=self.deferred_printers)
+--> 702             printer.pretty(obj)
+    703             printer.flush()
+    704             return stream.getvalue()
+
+/opt/conda/lib/python3.9/site-packages/IPython/lib/pretty.py in pretty(self, obj)
+    392                         if cls is not object \
+    393                                 and callable(cls.__dict__.get('__repr__')):
+--> 394                             return _repr_pprint(obj, self, cycle)
+    395 
+    396             return _default_pprint(obj, self, cycle)
+
+/opt/conda/lib/python3.9/site-packages/IPython/lib/pretty.py in _repr_pprint(obj, p, cycle)
+    698     """A pprint that just redirects to the normal repr function."""
+    699     # Find newlines and replace them with p.break_()
+--> 700     output = repr(obj)
+    701     lines = output.splitlines()
+    702     with p.group():
+
+/opt/conda/lib/python3.9/site-packages/pandas/core/frame.py in __repr__(self)
+    801         else:
+    802             width = None
+--> 803         self.to_string(
+    804             buf=buf,
+    805             max_rows=max_rows,
+
+/opt/conda/lib/python3.9/site-packages/pandas/core/frame.py in to_string(self, buf, columns, col_space, header, index, na_rep, formatters, float_format, sparsify, index_names, justify, max_rows, min_rows, max_cols, show_dimensions, decimal, line_width, max_colwidth, encoding)
+    937                 decimal=decimal,
+    938             )
+--> 939             return fmt.DataFrameRenderer(formatter).to_string(
+    940                 buf=buf,
+    941                 encoding=encoding,
+
+/opt/conda/lib/python3.9/site-packages/pandas/io/formats/format.py in to_string(self, buf, encoding, line_width)
+   1029 
+   1030         string_formatter = StringFormatter(self.fmt, line_width=line_width)
+-> 1031         string = string_formatter.to_string()
+   1032         return save_to_buffer(string, buf=buf, encoding=encoding)
+   1033 
+
+/opt/conda/lib/python3.9/site-packages/pandas/io/formats/string.py in to_string(self)
+     21 
+     22     def to_string(self) -> str:
+---> 23         text = self._get_string_representation()
+     24         if self.fmt.should_show_dimensions:
+     25             text = "".join([text, self.fmt.dimensions_info])
+
+/opt/conda/lib/python3.9/site-packages/pandas/io/formats/string.py in _get_string_representation(self)
+     36             return self._empty_info_line
+     37 
+---> 38         strcols = self._get_strcols()
+     39 
+     40         if self.line_width is None:
+
+/opt/conda/lib/python3.9/site-packages/pandas/io/formats/string.py in _get_strcols(self)
+     27 
+     28     def _get_strcols(self) -> List[List[str]]:
+---> 29         strcols = self.fmt.get_strcols()
+     30         if self.fmt.is_truncated:
+     31             strcols = self._insert_dot_separators(strcols)
+
+/opt/conda/lib/python3.9/site-packages/pandas/io/formats/format.py in get_strcols(self)
+    517         Render a DataFrame to a list of columns (as lists of strings).
+    518         """
+--> 519         strcols = self._get_strcols_without_index()
+    520 
+    521         if self.index:
+
+/opt/conda/lib/python3.9/site-packages/pandas/io/formats/format.py in _get_strcols_without_index(self)
+    772             str_columns = [[label] for label in self.header]
+    773         else:
+--> 774             str_columns = self._get_formatted_column_labels(self.tr_frame)
+    775 
+    776         if self.show_row_idx_names:
+
+/opt/conda/lib/python3.9/site-packages/pandas/io/formats/format.py in _get_formatted_column_labels(self, frame)
+    850             str_columns = [list(x) for x in zip(*str_columns)]
+    851         else:
+--> 852             fmt_columns = columns.format()
+    853             dtypes = self.frame.dtypes
+    854             need_leadsp = dict(zip(fmt_columns, map(is_numeric_dtype, dtypes)))
+
+/opt/conda/lib/python3.9/site-packages/pandas/core/indexes/base.py in format(self, name, formatter, na_rep)
+    976             return header + list(self.map(formatter))
+    977 
+--> 978         return self._format_with_header(header, na_rep=na_rep)
+    979 
+    980     def _format_with_header(
+
+/opt/conda/lib/python3.9/site-packages/pandas/core/indexes/base.py in _format_with_header(self, header, na_rep)
+    986 
+    987         if is_object_dtype(values.dtype):
+--> 988             values = lib.maybe_convert_objects(values, safe=1)
+    989 
+    990         if is_object_dtype(values.dtype):
+
+pandas/_libs/lib.pyx in pandas._libs.lib.maybe_convert_objects()
+
+TypeError: must be real number, not DataFrame
+---------------------------------------------------------------------------
+TypeError                                 Traceback (most recent call last)
+/opt/conda/lib/python3.9/site-packages/IPython/core/formatters.py in __call__(self, obj)
+    343             method = get_real_method(obj, self.print_method)
+    344             if method is not None:
+--> 345                 return method()
+    346             return None
+    347         else:
+
+/opt/conda/lib/python3.9/site-packages/pandas/core/frame.py in _repr_html_(self)
+    853                 decimal=".",
+    854             )
+--> 855             return fmt.DataFrameRenderer(formatter).to_html(notebook=True)
+    856         else:
+    857             return None
+
+/opt/conda/lib/python3.9/site-packages/pandas/io/formats/format.py in to_html(self, buf, encoding, classes, notebook, border, table_id, render_links)
+   1005             render_links=render_links,
+   1006         )
+-> 1007         string = html_formatter.to_string()
+   1008         return save_to_buffer(string, buf=buf, encoding=encoding)
+   1009 
+
+/opt/conda/lib/python3.9/site-packages/pandas/io/formats/html.py in to_string(self)
+     58 
+     59     def to_string(self) -> str:
+---> 60         lines = self.render()
+     61         if any(isinstance(x, str) for x in lines):
+     62             lines = [str(x) for x in lines]
+
+/opt/conda/lib/python3.9/site-packages/pandas/io/formats/html.py in render(self)
+    606         self.write("<div>")
+    607         self.write_style()
+--> 608         super().render()
+    609         self.write("</div>")
+    610         return self.elements
+
+/opt/conda/lib/python3.9/site-packages/pandas/io/formats/html.py in render(self)
+     64 
+     65     def render(self) -> List[str]:
+---> 66         self._write_table()
+     67 
+     68         if self.should_show_dimensions:
+
+/opt/conda/lib/python3.9/site-packages/pandas/io/formats/html.py in _write_table(self, indent)
+    232 
+    233         if self.fmt.header or self.show_row_idx_names:
+--> 234             self._write_header(indent + self.indent_delta)
+    235 
+    236         self._write_body(indent + self.indent_delta)
+
+/opt/conda/lib/python3.9/site-packages/pandas/io/formats/html.py in _write_header(self, indent)
+    366 
+    367         if self.fmt.header:
+--> 368             self._write_col_header(indent + self.indent_delta)
+    369 
+    370         if self.show_row_idx_names:
+
+/opt/conda/lib/python3.9/site-packages/pandas/io/formats/html.py in _write_col_header(self, indent)
+    346                 else:
+    347                     row.append("")
+--> 348             row.extend(self._get_columns_formatted_values())
+    349             align = self.fmt.justify
+    350 
+
+/opt/conda/lib/python3.9/site-packages/pandas/io/formats/html.py in _get_columns_formatted_values(self)
+    573 
+    574     def _get_columns_formatted_values(self) -> List[str]:
+--> 575         return self.columns.format()
+    576 
+    577     def write_style(self) -> None:
+
+/opt/conda/lib/python3.9/site-packages/pandas/core/indexes/base.py in format(self, name, formatter, na_rep)
+    976             return header + list(self.map(formatter))
+    977 
+--> 978         return self._format_with_header(header, na_rep=na_rep)
+    979 
+    980     def _format_with_header(
+
+/opt/conda/lib/python3.9/site-packages/pandas/core/indexes/base.py in _format_with_header(self, header, na_rep)
+    986 
+    987         if is_object_dtype(values.dtype):
+--> 988             values = lib.maybe_convert_objects(values, safe=1)
+    989 
+    990         if is_object_dtype(values.dtype):
+
+pandas/_libs/lib.pyx in pandas._libs.lib.maybe_convert_objects()
+
+TypeError: must be real number, not DataFrame
+We are trying to assign 'Not a number' as a value to some items which has a specific value, however, we have been thrown a huge error, because this is a TypeError. We must first specify the part of the data that we wan't to change to Nan, and then assign it to np.NaN. This will fix the error. See below
+
+data1[data1=='Aadi'] =np.nan
+data1
